@@ -27,19 +27,20 @@ class Decoder(nn.Module):
         # 对text进行padding
         lengths = [len(s) for s in text]
         lengths = torch.Tensor(lengths)
+        if use_gpu:
+            lengths = lengths.cuda()
         _, idx_sort = torch.sort(torch.Tensor(lengths), dim=0, descending=True)
         _, idx_unsort = torch.sort(idx_sort, dim=0)
         text = rnn.pad_sequence(text, batch_first=True)
-
+        if use_gpu:
+            text = text.cuda()
         text = text.index_select(0, idx_sort)
-        lengths = list(lengths[idx_sort])
+        lengths = lengths[idx_sort]
 
         # 对text进行embedding
         text = self.embedding(text.long())
 
         text = rnn.pack_padded_sequence(text,lengths,batch_first=True)
-        if use_gpu:
-            text = text.cuda()
 
         # 将text向量进行lstm，初始h,c使用图片lstm的h,c
         text,(h_,c_) = self.lstm_text(text,(h,c))

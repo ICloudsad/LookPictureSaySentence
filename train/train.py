@@ -14,8 +14,8 @@ from torch.utils.tensorboard import SummaryWriter
     epoch:学习轮数
     batch_size:批处理大小
 """
-epoch = 100
-batch_size = 64
+epoch = 1
+batch_size = 8
 
 
 
