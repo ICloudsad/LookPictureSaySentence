@@ -16,7 +16,7 @@ class Mydataset(Data.Dataset):
 def collate_fn(data):
     filenames,text,y = zip(*data)
     X = []
-    path = "../data/Flicker8k_Dataset"
+    path = "data/Flicker8k_Dataset"
     for file_name in filenames:
         img = Image.open(path+"/"+ file_name).resize((224,224))
         x = np.array(img)
@@ -33,7 +33,7 @@ def collate_fn(data):
     return X,text,y
 
 def read_data():
-    with open("../data/train_data",encoding="utf-8") as f:
+    with open("data/train_data",encoding="utf-8") as f:
         lines = f.readlines()
         lines = [eval(line) for line in lines]
     return lines
