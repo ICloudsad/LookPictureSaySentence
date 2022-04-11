@@ -77,9 +77,9 @@ for epoch_id in range(epoch):
     encode_state = {
         'encoder':encoder.state_dict(),
     }
-    torch.save(f"encoder_{epoch_id}.pt")
+    torch.save(encode_state,f"encoder_{epoch_id}.pt")
 
     decoder_state = {
         'decoder':decoder.state_dict(),
     }
-    torch.save(f"decoder_{epoch_id}.pt")
+    torch.save(decoder_state,f"decoder_{epoch_id}.pt")
