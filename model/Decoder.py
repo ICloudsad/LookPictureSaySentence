@@ -29,13 +29,13 @@ class Decoder(nn.Module):
         lengths = torch.Tensor(lengths)
         if use_gpu:
             lengths = lengths.cuda()
-        _, idx_sort = torch.sort(torch.Tensor(lengths), dim=0, descending=True)
+        _, idx_sort = torch.sort(lengths, dim=0, descending=True)
         _, idx_unsort = torch.sort(idx_sort, dim=0)
         text = rnn.pad_sequence(text, batch_first=True)
         if use_gpu:
             text = text.cuda()
         text = text.index_select(0, idx_sort)
-        lengths = lengths[idx_sort]
+        lengths = lengths.index_select(0,idx_sort)
 
         # 对text进行embedding
         text = self.embedding(text.long())
@@ -46,12 +46,11 @@ class Decoder(nn.Module):
         text,(h_,c_) = self.lstm_text(text,(h,c))
         text,_ = rnn.pad_packed_sequence(text,batch_first=True)
 
+        text = text.index_select(0,idx_unsort)
+        lengths = lengths.index_select(0,idx_unsort)
+
         # 使用attention对图像进行注意力，key:图像向量  query:文本向量  value:图像向量
         attn_out,att_wight = self.attention(text,image_feature,image_feature)
 
         y_ = self.fc(attn_out)
-        y_ = y_.index_select(0,idx_unsort)
-        lengths = torch.Tensor(lengths)
-        lengths = lengths.index_select(0,idx_unsort)
         return y_,lengths
-
