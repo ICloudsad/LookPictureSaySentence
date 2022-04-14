@@ -43,18 +43,14 @@ class Encoder(nn.Module):
             resnet.layer4
         )
         self.image_total_model = Sequential(
-            nn.Conv2d(2048, 1024, 1),
-            nn.Conv2d(1024, 512, 1),
-            nn.Conv2d(512, 512, 3, 2),
-            nn.Conv2d(512, 256, 1),
-            nn.Conv2d(256, 256, 3, 2),
+            nn.Conv2d(2048, 1024, 3,2),
+            nn.Conv2d(1024, 512, 3,2),
+            nn.Conv2d(512,256,1)
         )
-        self.fc1 = nn.Linear(2048,1024)
+        self.fc1 = nn.Linear(2048,512)
         self.relu = nn.ReLU()
         self.drop1 = nn.AlphaDropout()
-        self.fc2 = nn.Linear(1024,512)
-        self.drop2 = nn.AlphaDropout()
-        self.fc3 = nn.Linear(512,256)
+        self.fc2 = nn.Linear(512,256)
 
     def forward(self,x):
         image_features = self.image_features_model(x)
@@ -64,9 +60,6 @@ class Encoder(nn.Module):
         image_features = self.relu(image_features)
         image_features = self.drop1(image_features)
         image_features = self.fc2(image_features)
-        image_features = self.relu(image_features)
-        image_features = self.drop2(image_features)
-        image_features = self.fc3(image_features)
         image_features = self.relu(image_features)
         return image_features,image_total
 

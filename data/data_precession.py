@@ -3,40 +3,44 @@ import torch
 import numpy as np
 import torch.utils.data as Data
 
+
 class Mydataset(Data.Dataset):
-    def __init__(self,data):
+    def __init__(self, data):
         self.data = data
 
     def __len__(self):
         return len(self.data)
 
-    def __getitem__(self,index):
+    def __getitem__(self, index):
         return self.data[index]
 
+
 def collate_fn(data):
-    filenames,text,y = zip(*data)
+    filenames, text, y = zip(*data)
     X = []
-    path = "data/Flicker8k_Dataset"
+    path = "../data/Flicker8k_Dataset"
     for file_name in filenames:
-        img = Image.open(path+"/"+ file_name).resize((224,224))
+        img = Image.open(path + "/" + file_name).resize((224, 224))
         x = np.array(img)
-        #print(x.shape)
+        # print(x.shape)
         if x.shape[-1] == 4:
-            x = x[:,:,:-1]
-        #print(x.shape)
-        x = np.array(np.rollaxis(x,2))
-        #print(x.shape)
+            x = x[:, :, :-1]
+        # print(x.shape)
+        x = np.array(np.rollaxis(x, 2))
+        # print(x.shape)
         X.append(x)
     X = torch.tensor(X).float()
     y = [torch.tensor(_) for _ in y]
     text = [torch.tensor(_) for _ in text]
-    return X,text,y
+    return X, text, y,filenames
+
 
 def read_data():
-    with open("data/train_data",encoding="utf-8") as f:
+    with open("../data/train_data", encoding="utf-8") as f:
         lines = f.readlines()
         lines = [eval(line) for line in lines]
     return lines
+
 
 ''''
 
@@ -47,13 +51,15 @@ def read_data():
                 类似根据下面来定义y的
                 y = [torch.tensor(_) for _ in y]
 '''
+
+
 def get_loader(batch_size):
     data = read_data()
     dataset = Mydataset(data)
     loader = Data.DataLoader(
-            dataset,
-            batch_size=batch_size,
-            shuffle=True,
-            collate_fn=collate_fn
+        dataset,
+        batch_size=batch_size,
+        shuffle=True,
+        collate_fn=collate_fn
     )
     return loader
