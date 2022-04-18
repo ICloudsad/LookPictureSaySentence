@@ -89,7 +89,7 @@ class PictureGui(QWidget):
 
         self.debug_info.addItem('Status: BUSY :The program is processing images,please wait... ')
         print("input img " + self.url)
-        res = predict.look_image(open(self.url, encoding='utf-8', mode='r'))
+        res = predict.lookimage(self.url)
         self.debug_info.addItem('******describe ' + res + '******')
         self.debug_info.addItem('Status:IDLE :images finish !')
 
