@@ -13,3 +13,8 @@ class AdaLookImageNet(nn.Module):
         image_feature,image_total = self.encoder(image)
         output = self.decoder(image_feature,image_total,text)
         return output
+
+    def predict(self,image,text,h,c):
+        image_feature, image_total = self.encoder(image)
+        output,h,c = self.decoder.predict(image_feature,image_total,text,h,c)
+        return output,h,c
