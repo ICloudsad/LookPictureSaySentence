@@ -39,6 +39,11 @@ class PictureGui(QWidget):
         self.debug_info = QListWidget()
         self.debug_info.setToolTip("日志窗口")
 
+        # add statusBar
+        # statusBar = QStatusBar()
+        # statusBar.setStyleSheet('QStatusBar::item {border: none;}')
+        # self.setStatusBar(statusBar)
+        # progressBar = QProgressBar()
 
         # horizon
         h_box = QHBoxLayout()
