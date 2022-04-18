@@ -3,4 +3,5 @@
 from predict.predict import lookimage
 
 if __name__ == '__main__':
-    print(lookimage('../test/23016250.jpg'))
+    sentence = lookimage('../test/23016250.jpg')
+    print(sentence)
