@@ -13,8 +13,9 @@ class Mydataset(Data.Dataset):
             transforms.Normalize((0.485, 0.456, 0.406),
                                  (0.229, 0.224, 0.225))]
         )
-        self.path_flickr = "../input/flickr-image-dataset/flickr30k_images/flickr30k_images"
+        self.path_flickr30k = "../input/flickr-image-dataset/flickr30k_images/flickr30k_images"
         self.path_coco = "../input/coco2014/train2014/train2014"
+        self.path_flickr8k = "../data/Flicker8k_Dataset"
 
     def __len__(self):
         return len(self.data)
@@ -24,7 +25,7 @@ class Mydataset(Data.Dataset):
         if filename.startswith("COCO"):
             img = Image.open(self.path_coco + "/" + filename).convert("RGB").resize((224, 224))
         else:
-            img = Image.open(self.path_flickr + "/" + filename).convert("RGB").resize((224, 224))
+            img = Image.open(self.path_flickr30k + "/" + filename).convert("RGB").resize((224, 224))
         img = self.transform(img)
         y = torch.tensor(y)
         text = torch.tensor(text)
@@ -38,7 +39,7 @@ def collate_fn(data):
 
 
 def read_data():
-    with open("../input/lookimage2/train_data_2", encoding="utf-8") as f:
+    with open("../data/train_data_2", encoding="utf-8") as f:
         lines = f.readlines()
         lines = [eval(line) for line in lines]
     return lines

@@ -28,6 +28,14 @@ class AdaDecoder(nn.Module):
         outputs = torch.stack(outputs,dim=1)
         return outputs
 
+    def predict(self,image_feature,image_total,text,h_t,m_t):
+        text_i = self.embedding(text)
+        t_v_i = torch.cat([text_i, image_total], dim=1)
+        s_t, h_t, m_t = self.lstmcell(t_v_i, h_t, m_t)
+        c_t_hat = self.attention(image_feature, s_t, h_t)
+        output = self.softmax(self.mlp(c_t_hat + h_t))
+        return output,h_t,m_t
+
 
 
 
